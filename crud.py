@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from classes.models.home_appliance import HomeAppliance
@@ -10,7 +10,7 @@ import copy
 with open('secret.json') as f:
     SECRET = json.load(f)
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 DB_URI = "mysql+mysqlconnector://{user}:{password}@{host}:{port}/{db}".format(
     user=SECRET["user"],
     password=SECRET["password"],
@@ -50,7 +50,7 @@ class SmartHomeAppliance(HomeAppliance, db.Model):
 
 class SmartHomeApplianceSchema(ma.Schema):
     class Meta:
-        fields = ('_power_consumption', '_hours_per_month_usage',
+        fields = ('id', '_power_consumption', '_hours_per_month_usage',
                   '_repair_price', '_location_in_house', '_appliance_name',
                   '_plugged_into_socket', '_connection_protocol',
                   '_data_transfer_amount')
@@ -60,24 +60,21 @@ smart_home_appliance_schema = SmartHomeApplianceSchema()
 smart_home_appliances_schema = SmartHomeApplianceSchema(many=True)
 
 
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
+
+
 @app.route("/smart_home_appliance", methods=["POST"])
 def add_smart_home_appliance():
-    power_consumption = request.json['power_consumption']
-    hours_per_month_usage = request.json['hours_per_month_usage']
-    repair_price = request.json['repair_price']
-    location_in_house = request.json['location_in_house']
-    appliance_name = request.json['appliance_name']
-    plugged_into_socket = request.json['plugged_into_socket']
-    connection_protocol = request.json['connection_protocol']
-    data_transfer_amount = request.json['data_transfer_amount']
-    smart_home_appliance = SmartHomeAppliance(power_consumption,
-                                              hours_per_month_usage,
-                                              repair_price,
-                                              location_in_house,
-                                              appliance_name,
-                                              plugged_into_socket,
-                                              connection_protocol,
-                                              data_transfer_amount)
+    smart_home_appliance = SmartHomeAppliance(request.json['power_consumption'],
+                                              request.json['hours_per_month_usage'],
+                                              request.json['repair_price'],
+                                              request.json['location_in_house'],
+                                              request.json['appliance_name'],
+                                              request.json['plugged_into_socket'],
+                                              request.json['connection_protocol'],
+                                              request.json['data_transfer_amount'])
     db.session.add(smart_home_appliance)
     db.session.commit()
     return smart_home_appliance_schema.jsonify(smart_home_appliance)
@@ -87,6 +84,15 @@ def add_smart_home_appliance():
 def get_smart_home_appliance():
     all_smart_home_appliance = SmartHomeAppliance.query.all()
     result = smart_home_appliances_schema.dump(all_smart_home_appliance)
+    return jsonify({'smart_home_appliances': result})
+
+
+@app.route("/smart_home_appliance/search/<search>", methods=["GET"])
+def smart_home_appliance_search(search):
+    smart_home_appliance = SmartHomeAppliance.query.filter(SmartHomeAppliance._appliance_name==search)
+    if not smart_home_appliance:
+        return jsonify({})
+    result = smart_home_appliances_schema.dump(smart_home_appliance)
     return jsonify({'smart_home_appliances': result})
 
 
@@ -128,4 +134,4 @@ def smart_home_appliance_delete(id):
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='127.0.0.1')
