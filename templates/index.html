@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Appliance API</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header__wrapper">
+                <nav class="header__nav">
+                    <form class="flex" id="submit">
+                        <label for="search">
+                            <input type="text" id="search" placeholder="Search for appliance name" />
+                        </label>
+                        <button class="search-btn" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </nav>
+            </div>
+        </header>
+        <div class="container-2">
+          <aside>
+            <button class="aside__button" id="sort">Sort Power Consumption</button>
+            <button class="aside__button" id="calculate-consumption">Calculate Total Cost</button>
+          </aside>
+            <div class="main">
+                <h2><strong>Item</strong> Information</h2>
+                <div id="single-appliance"></div>
+                <div id="result-heading"></div>
+                <div id="appliances" class="appliances"></div>
+                <div id="total" class="total"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{{ url_for('static', filename='search.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='manipulate.js') }}"></script>
+    </div>
+</body>
+</html>
