@@ -24,7 +24,7 @@ function addData(obj) {
 }
 
 function formatPowerConsumption(number) {
-  return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  return number.toFixed(2);
 }
 
 function sortByUsage() {
