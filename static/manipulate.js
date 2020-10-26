@@ -2,6 +2,7 @@ const main = document.getElementById('appliances');
 const total = document.getElementById('total');
 const sortBtn = document.getElementById('sort');
 const calculatePowerConsumptionBtn = document.getElementById('calculate-consumption');
+const trashImg = document.getElementById('trashImg');
 
 let data = [];
 
@@ -19,8 +20,21 @@ async function getData() {
   }
 }
 
+function cleanData(){
+  data = [];
+}
+
 function addData(obj) {
   data.push(obj);
+}
+
+function deleteAppliance(id){
+  const formData = new FormData();
+  let delete_endpoint = 'http://127.0.0.1:5000/smart_home_appliance/' + id;
+  return fetch(delete_endpoint, {
+        method: 'DELETE',
+        body: formData
+    }).then(response => response.json());
 }
 
 function formatPowerConsumption(number) {
@@ -37,6 +51,7 @@ function sortByUsage() {
     <div class="appliance-info" data-applianceID="${appliance.id}">
       <h3>Location: ${appliance._location_in_house}</h3>
       <h3>Consumption: ${appliance._power_consumption}</h3>
+      <h3><a href="/edit/${appliance.id}">#${appliance.id}</a><img alt="Delete" src="/static/trash.png" width="30" height="30" class="trashImg" onclick="deleteAppliance(${appliance.id})"/></h3>
     </div>
   </div>
 `
@@ -57,3 +72,4 @@ function calculatePowerConsumption() {
 
 calculatePowerConsumptionBtn.addEventListener('click', calculatePowerConsumption);
 sortBtn.addEventListener('click', sortByUsage);
+trashImg.addEventListener('click', deleteAppliance);

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creation</title>
+    <link rel="stylesheet" href="/static/forms.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header__wrapper">
+                <nav class="header__nav">
+                </nav>
+            </div>
+        </header>
+        <form id="form" onSubmit="return checkform()" action="/smart_home_appliance" method="POST" class="form">
+        <h2>Create new appliance</h2>
+        <div class="form-control">
+          <label for="power_consumption">Power Consumption</label>
+          <input type="text" id="power_consumption" name="power_consumption" value="10" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="hours_per_month_usage">Hours Per Month Usage</label>
+          <input type="text" id="hours_per_month_usage" name="hours_per_month_usage" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="repair_price">Repair Price</label>
+          <input id="repair_price" name="repair_price" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="location_in_house">Location in House</label>
+          <input id="location_in_house" name="location_in_house" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="appliance_name">Appliance Name</label>
+          <input id="appliance_name" name="appliance_name" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="plugged_into_socket">Needs Socket?</label>
+          <input id="plugged_into_socket" name="plugged_into_socket" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="connection_protocol">Connection Protocol</label>
+          <input id="connection_protocol" name="connection_protocol" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <div class="form-control">
+          <label for="data_transfer_amount">Data Transfer Amount</label>
+          <input id="data_transfer_amount" name="data_transfer_amount" placeholder="" />
+          <small>Error message</small>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+      <script type="text/javascript" src="{{ url_for('static', filename='validation.js') }}"></script>
+    </div>
+</body>
+</html>

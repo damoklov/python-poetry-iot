@@ -44,8 +44,8 @@ class SmartHomeAppliance(HomeAppliance, db.Model):
         super().__init__(power_consumption, hours_per_month_usage,
                          repair_price, location_in_house,
                          appliance_name, plugged_into_socket)
-        self._connection_protocol = connection_protocol
-        self._data_transfer_amount = data_transfer_amount
+        self._connection_protocol = str(connection_protocol)
+        self._data_transfer_amount = float(data_transfer_amount)
 
 
 class SmartHomeApplianceSchema(ma.Schema):
@@ -65,16 +65,38 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/create", methods=["GET"])
+def create():
+    return render_template("create.html")
+
+
+@app.route("/edit/<id>", methods=["GET"])
+def edit(id):
+    return render_template("edit.html", id=id)
+
+
 @app.route("/smart_home_appliance", methods=["POST"])
 def add_smart_home_appliance():
-    smart_home_appliance = SmartHomeAppliance(request.json['power_consumption'],
-                                              request.json['hours_per_month_usage'],
-                                              request.json['repair_price'],
-                                              request.json['location_in_house'],
-                                              request.json['appliance_name'],
-                                              request.json['plugged_into_socket'],
-                                              request.json['connection_protocol'],
-                                              request.json['data_transfer_amount'])
+    if request.form.to_dict() == dict():
+        request_form = request.json
+    elif request.form.to_dict() != dict():
+        request_form = request.form
+    else:
+        abort(404)
+        return
+    try:
+        smart_home_appliance = SmartHomeAppliance(
+            request_form['power_consumption'],
+            request_form['hours_per_month_usage'],
+            request_form['repair_price'],
+            request_form['location_in_house'],
+            request_form['appliance_name'],
+            request_form['plugged_into_socket'],
+            request_form['connection_protocol'],
+            request_form['data_transfer_amount'])
+    except (KeyError, TypeError):
+        abort(404)
+        return
     db.session.add(smart_home_appliance)
     db.session.commit()
     return smart_home_appliance_schema.jsonify(smart_home_appliance)
@@ -104,21 +126,32 @@ def smart_home_appliance_detail(id):
     return smart_home_appliance_schema.jsonify(smart_home_appliance)
 
 
-@app.route("/smart_home_appliance/<id>", methods=["PUT"])
+@app.route("/smart_home_appliance/<id>", methods=["PUT", "POST"])
 def smart_home_appliance_update(id):
     smart_home_appliance = SmartHomeAppliance.query.get(id)
     if not smart_home_appliance:
         abort(404)
     old_smart_home_appliance = copy.deepcopy(smart_home_appliance)
-    smart_home_appliance.power_consumption = request.json['power_consumption']
-    smart_home_appliance.hours_per_month_usage = request.json['hours_per_month_usage']
-    smart_home_appliance.repair_price = request.json['repair_price']
-    smart_home_appliance.location_in_house = request.json['location_in_house']
-    smart_home_appliance.appliance_name = request.json['appliance_name']
-    smart_home_appliance.plugged_into_socket = request.json['plugged_into_socket']
-    smart_home_appliance.connection_protocol = request.json['connection_protocol']
-    smart_home_appliance.data_transfer_amount = request.json['data_transfer_amount']
-    db.session.commit()
+    if request.form.to_dict() == dict():
+        request_form = request.json
+    elif request.form.to_dict() != dict():
+        request_form = request.form
+    else:
+        abort(404)
+        return
+    try:
+        smart_home_appliance.power_consumption = int(request_form['power_consumption'])
+        smart_home_appliance.hours_per_month_usage = float(request_form['hours_per_month_usage'])
+        smart_home_appliance.repair_price = float(request_form['repair_price'])
+        smart_home_appliance.location_in_house = str(request_form['location_in_house'])
+        smart_home_appliance.appliance_name = str(request_form['appliance_name'])
+        smart_home_appliance.plugged_into_socket = bool(int(request_form['plugged_into_socket']))
+        smart_home_appliance.connection_protocol = str(request_form['connection_protocol'])
+        smart_home_appliance.data_transfer_amount = float(request_form['data_transfer_amount'])
+        db.session.commit()
+    except (KeyError, TypeError):
+        abort(404)
+        return
     return smart_home_appliance_schema.jsonify(old_smart_home_appliance)
 
 
