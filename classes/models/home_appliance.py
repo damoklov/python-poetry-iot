@@ -1,3 +1,6 @@
+import distutils
+
+
 class HomeAppliance:
     """
     >>> HomeAppliance().__class__.__name__
@@ -8,12 +11,12 @@ class HomeAppliance:
     def __init__(self, power_consumption=0, hours_per_month_usage=0.0,
                  repair_price=0.0, location_in_house='N/A',
                  appliance_name='N/A', plugged_into_socket=False):
-        self._power_consumption = power_consumption
-        self._hours_per_month_usage = hours_per_month_usage
-        self._repair_price = repair_price
-        self._location_in_house = location_in_house
-        self._appliance_name = appliance_name
-        self._plugged_into_socket = plugged_into_socket
+        self._power_consumption = int(power_consumption)
+        self._hours_per_month_usage = float(hours_per_month_usage)
+        self._repair_price = float(repair_price)
+        self._location_in_house = str(location_in_house)
+        self._appliance_name = str(appliance_name)
+        self._plugged_into_socket = bool(int(plugged_into_socket))
 
     def compute_final_money_spent_per_month_in_usd(self):
         """
