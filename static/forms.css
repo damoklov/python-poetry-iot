@@ -10,8 +10,8 @@
 }
 
 body {
-  background-color: #f9fafb;
-  font-family: 'Open Sans', sans-serif;
+  background: whitesmoke;
+  font-family: 'Open Sans', 'SansSerif', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;

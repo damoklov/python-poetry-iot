@@ -8,7 +8,6 @@ const plugged_into_socket = document.getElementById('plugged_into_socket');
 const connection_protocol = document.getElementById('connection_protocol');
 const data_transfer_amount = document.getElementById('data_transfer_amount');
 
-// Show input error message
 function showError(input, message) {
   const formControl = input.parentElement;
   formControl.className = 'form-control error';
@@ -16,13 +15,11 @@ function showError(input, message) {
   small.innerText = message;
 }
 
-// Show success outline
 function showSuccess(input) {
   const formControl = input.parentElement;
   formControl.className = 'form-control success';
 }
 
-// Check required fields
 function checkRequired(inputArr) {
   let isRequired = false;
   inputArr.forEach(function(input) {
@@ -82,7 +79,6 @@ function checkStr(input){
     }
 }
 
-// Get fieldname
 function getFieldName(input) {
   return input.id.charAt(0).toUpperCase() + input.id.slice(1);
 }
