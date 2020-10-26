@@ -4,7 +4,6 @@ const appliancesEl = document.getElementById('appliances');
 const resultHeading = document.getElementById('result-heading');
 const singleAppliance = document.getElementById('single-appliance');
 
-
 function searchAppliance(e) {
   e.preventDefault();
   singleAppliance.innerHTML = '';
@@ -29,10 +28,11 @@ function searchAppliance(e) {
             .map(
               appliance => `
             <div class="appliance">
-              <h1>${appliance._appliance_name}</h1>
+              <h1>${appliance._appliance_name} #${appliance.id}</h1>
               <div class="appliance-info" data-applianceID="${appliance.id}">
                 <h3>Location: ${appliance._location_in_house}</h3>
                 <h3>Consumption: ${appliance._power_consumption}</h3>
+                <h3><a href="/edit/${appliance.id}">#${appliance.id}</a><img alt="Delete" src="/static/trash.png" width="30" height="30" class="trashImg" onclick="deleteAppliance(${appliance.id})"/></h3>
               </div>
             </div>
           `
@@ -64,6 +64,7 @@ function searchAppliance(e) {
                   <div class="appliance-info" data-applianceID="${appliance.id}">
                     <h3>Location: ${appliance._location_in_house}</h3>
                     <h3>Consumption: ${appliance._power_consumption}</h3>
+                    <h3><a href="/edit/${appliance.id}">#${appliance.id}</a><img alt="Delete" src="/static/trash.png" width="30" height="30" class="trashImg" onclick="deleteAppliance(${appliance.id})"/></h3>
                   </div>
                 </div>
               `
@@ -79,4 +80,4 @@ function addData(obj) {
 }
 
 submit.addEventListener('submit', searchAppliance);
-
+trashImg.addEventListener('click', deleteAppliance);
